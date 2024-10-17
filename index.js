@@ -1,10 +1,7 @@
 import http from "http";
 import myDateTime from "./date";
 import { getParamsURL, getPath } from "./getURL";
-
-// var http = import("http");
-// var date = import("./date");
-// var getURL = import("./getURL");
+import "bootstrap/dist/css/bootstrap.min.css";
 
 http
   .createServer(function (req, res) {
