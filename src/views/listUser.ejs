@@ -1,0 +1,18 @@
+<% for(let i=0; i<data.rows.length;i++) { %>
+  <tr>
+    <th scope="row"><%= i+1 %></th>
+    <td><%= data.rows[i].use %></td>
+    <td><%data.rows[i].fullname %></td>
+    <td><%= data.rows[i].address %></td>
+    <td>
+      <span class="setting"><i class="fa fa-eye" aria hidden="true"></i></span>
+      <span class="setting"
+        ><i class="fa-fa-pencil-square-o" aria-hidden="true"></i
+      ></span>
+      <span class="setting"
+        ><i class="fa fa-trash" aria-hidden="true"></i
+      ></span>
+    </td>
+  </tr>
+  <% }%></data.rows.length;i++)
+>
