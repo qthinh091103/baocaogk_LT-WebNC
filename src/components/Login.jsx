@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-// import Profile from "../router/Profile";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +8,7 @@ const LoginForm = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,12 +18,24 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/account/login",
+        "http://localhost:5000/login",
         formData
       );
       localStorage.setItem("token", response.data.token);
       setMessage("Đăng nhập thành công!");
-      window.location.href = "/"; // sau / là điều hướng
+
+      const token = localStorage.getItem("token");
+
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const userRole = decodedToken.role;
+
+      if (userRole === "admin") {
+        navigate("/profileadmin");
+      } else if (userRole === "moderator") {
+        navigate("/moderator-dashboard");
+      } else {
+        navigate("/profileuser");
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || "Đăng nhập thất bại!");
     }
