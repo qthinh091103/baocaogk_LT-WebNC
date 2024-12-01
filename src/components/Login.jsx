@@ -18,26 +18,20 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/login",
+        "http://localhost:5000/account/login",
         formData
       );
       localStorage.setItem("token", response.data.token);
       setMessage("Đăng nhập thành công!");
-
-      const token = localStorage.getItem("token");
-
-      const decodedToken = JSON.parse(atob(token.split(".")[1]));
-      const userRole = decodedToken.role;
-
-      if (userRole === "admin") {
-        navigate("/profileadmin");
-      } else if (userRole === "moderator") {
-        navigate("/moderator-dashboard");
-      } else {
-        navigate("/profileuser");
-      }
+      navigate("/userdashboard", { state: { user: response.data.user } });
     } catch (error) {
-      setMessage(error.response?.data?.message || "Đăng nhập thất bại!");
+      if (error.response) {
+        setMessage(error.response.data.message || "Đăng nhập thất bại!");
+      } else if (error.request) {
+        setMessage("Không thể kết nối đến server! Vui lòng thử lại.");
+      } else {
+        setMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
+      }
     }
   };
 

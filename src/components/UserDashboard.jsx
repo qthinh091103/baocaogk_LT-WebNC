@@ -1,11 +1,13 @@
+// src/pages/UserDashboard.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UpdateProfile from "./UpdateProfile";
+import { useNavigate } from "react-router-dom";
 
-function UserDashbroad() {
+const UserDashboard = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,7 +19,7 @@ function UserDashbroad() {
     }
 
     axios
-      .get("http://localhost:5000/profile", {
+      .get("http://localhost:5000/profile/dashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -26,8 +28,8 @@ function UserDashbroad() {
         setUser(response.data.user);
         setLoading(false);
       })
-      .catch((err) => {
-        setError("Không thể tải thông tin người dùng.");
+      .catch(() => {
+        setError("Không tải được thông tin rồi bạn ơi.");
         setLoading(false);
       });
   }, []);
@@ -67,11 +69,11 @@ function UserDashbroad() {
           </tr>
         </tbody>
       </table>
-      <a href="/UpdateProfile" className="btn btn-primary">
+      <button className="btn btn-primary" onClick={() => navigate("/profile")}>
         Cập nhật thông tin
-      </a>
+      </button>
     </div>
   );
-}
+};
 
-export default UserDashbroad;
+export default UserDashboard;

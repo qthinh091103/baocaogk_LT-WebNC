@@ -19,7 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/updateprofile" element={<UpdateProfile />} />
         <Route path="/homepage" element={<HomePage />} />
-        <Route path="/profileuser" element={<UserDashboard />} />
+        <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/Logout" element={<LogoutPage />} />
       </Routes>
       <Footer />

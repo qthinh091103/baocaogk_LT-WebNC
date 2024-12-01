@@ -27,7 +27,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/user/register",
+        "http://localhost:5000/account/register",
         formData
       );
       setMessage(response.data.message);

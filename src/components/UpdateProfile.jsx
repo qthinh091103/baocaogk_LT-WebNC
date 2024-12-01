@@ -1,44 +1,51 @@
+// src/pages/ProfilePage.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const ProfilePage = ({ userId }) => {
+const UpdateProfile = () => {
   const [user, setUser] = useState({
-    fullName: "",
+    fullname: "",
     phone: "",
     address: "",
     email: "",
   });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/routes/profile/${userId}`
-        );
-        setUser(response.data);
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
-        setMessage(
-          error.response?.data?.message || "Không thể tải thông tin người dùng"
-        );
-      }
-    };
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMessage("Bạn cần đăng nhập để truy cập trang này.");
+      return;
+    }
 
-    fetchUser();
-  }, [userId]);
+    axios
+      .get("http://localhost:5000/profile/dashboard", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setUser(response.data.user);
+      })
+      .catch(() => {
+        setMessage("Không thể tải thông tin người dùng.");
+      });
+  }, []);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
-        `http://localhost:5000/routes /profile/${userId}`,
-        user
-      );
+      const token = localStorage.getItem("token");
+      const response = await axios.put("http://localhost:5000/profile", user, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setMessage(response.data.message);
     } catch (error) {
-      console.error("Lỗi khi cập nhật thông tin người dùng:", error);
-      setMessage(error.response?.data?.message || "Cập nhật thất bại");
+      setMessage("Cập nhật thông tin thất bại.");
     }
   };
 
@@ -48,19 +55,19 @@ const ProfilePage = ({ userId }) => {
 
   return (
     <div className="container mt-5">
-      <h2>Thông tin người dùng</h2>
+      <h2>Cập nhật thông tin cá nhân</h2>
       {message && <div className="alert alert-info">{message}</div>}
       <form onSubmit={handleUpdate}>
         <div className="mb-3">
-          <label htmlFor="fullName" className="form-label">
+          <label htmlFor="fullname" className="form-label">
             Họ và tên
           </label>
           <input
             type="text"
             className="form-control"
-            id="fullName"
-            name="fullName"
-            value={user.fullName}
+            id="fullname"
+            name="fullname"
+            value={user.fullname}
             onChange={handleChange}
           />
         </div>
@@ -107,12 +114,19 @@ const ProfilePage = ({ userId }) => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          Cập nhật thông tin
+        <button type="submit" className="btn btn-success">
+          Lưu thay đổi
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary ms-3"
+          onClick={() => navigate("/dashboard")}
+        >
+          Quay lại
         </button>
       </form>
     </div>
   );
 };
 
-export default ProfilePage;
+export default UpdateProfile;
