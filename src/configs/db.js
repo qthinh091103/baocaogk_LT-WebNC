@@ -1,9 +1,20 @@
 import mysql from "mysql2";
-const pool = mysql.createPool({
+
+const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  database: "ltwebnc",
   password: "",
+  database: "baocaogk",
+  multipleStatements: true,
 });
-const connection = pool.promise();
-export default connection;
+
+// Kết nối đến DB
+db.connect((err) => {
+  if (err) {
+    console.error("Lỗi kết nối đến MySQL:", err.message);
+    return;
+  }
+  console.log("Kết nối MySQL thành công! ID kết nối:", db.threadId);
+});
+
+export default db;
